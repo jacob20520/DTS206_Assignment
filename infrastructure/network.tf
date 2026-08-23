@@ -71,3 +71,17 @@ resource "aws_route_table_association" "public_bastion" {
   subnet_id      = aws_subnet.public_bastion.id
   route_table_id = aws_route_table.public.id
 }
+
+resource "aws_route_table" "private_web" {
+  vpc_id = aws_vpc.medicore.id
+
+  tags = {
+    Name = "${var.project_name}-rt-private-web"
+    Tier = "Private"
+  }
+}
+
+resource "aws_route_table_association" "private_web" {
+  subnet_id      = aws_subnet.private_web.id
+  route_table_id = aws_route_table.private_web.id
+}
