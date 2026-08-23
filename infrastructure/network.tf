@@ -85,3 +85,17 @@ resource "aws_route_table_association" "private_web" {
   subnet_id      = aws_subnet.private_web.id
   route_table_id = aws_route_table.private_web.id
 }
+
+resource "aws_route_table" "restricted_database" {
+  vpc_id = aws_vpc.medicore.id
+
+  tags = {
+    Name = "${var.project_name}-rt-restricted-database"
+    Tier = "Restricted"
+  }
+}
+
+resource "aws_route_table_association" "restricted_database" {
+  subnet_id      = aws_subnet.restricted_database.id
+  route_table_id = aws_route_table.restricted_database.id
+}
