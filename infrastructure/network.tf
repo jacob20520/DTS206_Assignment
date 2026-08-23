@@ -19,3 +19,27 @@ resource "aws_subnet" "public_bastion" {
     Tier = "Public"
   }
 }
+
+resource "aws_subnet" "private_web" {
+  vpc_id                  = aws_vpc.medicore.id
+  cidr_block              = var.private_subnet_cidr
+  availability_zone       = data.aws_availability_zones.available.names[1]
+  map_public_ip_on_launch = false
+
+  tags = {
+    Name = "${var.project_name}-subnet-private-web"
+    Tier = "Private"
+  }
+}
+
+resource "aws_subnet" "restricted_database" {
+  vpc_id                  = aws_vpc.medicore.id
+  cidr_block              = var.restricted_subnet_cidr
+  availability_zone       = data.aws_availability_zones.available.names[2]
+  map_public_ip_on_launch = false
+
+  tags = {
+    Name = "${var.project_name}-subnet-restricted-database"
+    Tier = "Restricted"
+  }
+}
