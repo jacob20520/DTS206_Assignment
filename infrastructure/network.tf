@@ -43,3 +43,11 @@ resource "aws_subnet" "restricted_database" {
     Tier = "Restricted"
   }
 }
+
+resource "aws_internet_gateway" "medicore" {
+  vpc_id = aws_vpc.medicore.id
+
+  tags = {
+    Name = "${var.project_name}-igw"
+  }
+}
