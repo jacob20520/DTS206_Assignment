@@ -1,3 +1,7 @@
+# ============================================================
+# AWS / Project
+# ============================================================
+
 variable "aws_region" {
   description = "AWS region used for the MediCore deployment."
   type        = string
@@ -15,6 +19,11 @@ variable "environment" {
   type        = string
   default     = "assignment"
 }
+
+
+# ============================================================
+# Networking
+# ============================================================
 
 variable "vpc_cidr" {
   description = "CIDR range for the MediCore VPC."
@@ -40,6 +49,11 @@ variable "restricted_subnet_cidr" {
   default     = "10.20.30.0/24"
 }
 
+
+# ============================================================
+# Administrative Access
+# ============================================================
+
 variable "admin_cidr" {
   description = "Public IPv4 CIDR permitted to SSH to the Bastion host."
   type        = string
@@ -60,6 +74,11 @@ variable "ssh_public_key_path" {
   default     = "~/.ssh/medicore_ed25519.pub"
 }
 
+
+# ============================================================
+# Fixed Private Addresses
+# ============================================================
+
 variable "bastion_private_ip" {
   description = "Static private IPv4 address of the Bastion host."
   type        = string
@@ -67,16 +86,21 @@ variable "bastion_private_ip" {
 }
 
 variable "web_private_ip" {
-  description = "Static private IPv4 address reserved for the Web/Application VM."
+  description = "Static private IPv4 address of the Web/Application VM."
   type        = string
   default     = "10.20.20.10"
 }
 
 variable "database_private_ip" {
-  description = "Static private IPv4 address reserved for the Database VM."
+  description = "Static private IPv4 address of the Database VM."
   type        = string
   default     = "10.20.30.10"
 }
+
+
+# ============================================================
+# EC2 Instance Types
+# ============================================================
 
 variable "bastion_instance_type" {
   description = "EC2 instance type used by the Bastion host."

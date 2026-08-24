@@ -69,25 +69,6 @@ output "bastion_private_ip" {
 
 
 # ============================================================
-# Security Groups
-# ============================================================
-
-output "bastion_security_group_id" {
-  description = "Security group attached to the MediCore Bastion."
-  value       = aws_security_group.bastion.id
-}
-
-output "web_security_group_id" {
-  description = "Security group reserved for the Web/Application tier."
-  value       = aws_security_group.web.id
-}
-
-output "database_security_group_id" {
-  description = "Security group reserved for the Database VM."
-  value       = aws_security_group.database.id
-}
-
-# ============================================================
 # Web / Application VM
 # ============================================================
 
@@ -124,4 +105,49 @@ output "database_private_ip" {
 output "database_availability_zone" {
   description = "Availability Zone hosting the MediCore Database VM."
   value       = aws_instance.database.availability_zone
+}
+
+
+# ============================================================
+# Security Groups
+# ============================================================
+
+output "bastion_security_group_id" {
+  description = "Security group attached to the MediCore Bastion."
+  value       = aws_security_group.bastion.id
+}
+
+output "web_security_group_id" {
+  description = "Security group attached to the Web/Application tier."
+  value       = aws_security_group.web.id
+}
+
+output "database_security_group_id" {
+  description = "Security group attached to the Database tier."
+  value       = aws_security_group.database.id
+}
+
+
+# ============================================================
+# S3 Private Storage
+# ============================================================
+
+output "s3_bucket_name" {
+  description = "Name of the private MediCore S3 storage bucket."
+  value       = aws_s3_bucket.medicore_storage.id
+}
+
+output "s3_bucket_arn" {
+  description = "ARN of the private MediCore S3 storage bucket."
+  value       = aws_s3_bucket.medicore_storage.arn
+}
+
+output "s3_vpc_endpoint_id" {
+  description = "ID of the S3 Gateway VPC Endpoint."
+  value       = aws_vpc_endpoint.s3.id
+}
+
+output "s3_prefix_list_id" {
+  description = "AWS-managed S3 prefix list used by security group egress rules."
+  value       = aws_vpc_endpoint.s3.prefix_list_id
 }

@@ -106,6 +106,17 @@ resource "aws_vpc_security_group_egress_rule" "web_postgresql_database" {
   cidr_ipv4 = "${var.database_private_ip}/32"
 }
 
+resource "aws_vpc_security_group_egress_rule" "web_https_s3" {
+  security_group_id = aws_security_group.web.id
+  description       = "HTTPS access from Web/Application tier to Amazon S3."
+
+  ip_protocol = "tcp"
+  from_port   = 443
+  to_port     = 443
+
+  prefix_list_id = aws_vpc_endpoint.s3.prefix_list_id
+}
+
 
 # ============================================================
 # Database Security Group
@@ -142,4 +153,15 @@ resource "aws_vpc_security_group_ingress_rule" "database_postgresql_web" {
   to_port     = 5432
 
   cidr_ipv4 = "${var.web_private_ip}/32"
+}
+
+resource "aws_vpc_security_group_egress_rule" "database_https_s3" {
+  security_group_id = aws_security_group.database.id
+  description       = "HTTPS access from Database tier to Amazon S3 for backups."
+
+  ip_protocol = "tcp"
+  from_port   = 443
+  to_port     = 443
+
+  prefix_list_id = aws_vpc_endpoint.s3.prefix_list_id
 }
