@@ -11,7 +11,8 @@ tfplan
 crash.log
 crash.*.log
 
-# Terraform variable files may contain secrets
+# Terraform variable files may contain
+# environment-specific or sensitive values
 *.tfvars
 *.tfvars.json
 
