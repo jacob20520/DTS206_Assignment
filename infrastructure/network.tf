@@ -48,7 +48,7 @@ resource "aws_subnet" "private_web" {
 
 
 # ============================================================
-# Restricted Database Subnet
+# Primary Restricted Database Subnet
 # ============================================================
 
 resource "aws_subnet" "restricted_database" {
@@ -60,6 +60,28 @@ resource "aws_subnet" "restricted_database" {
   tags = {
     Name = "${var.project_name}-subnet-restricted-database"
     Tier = "Restricted"
+  }
+}
+
+
+# ============================================================
+# Secondary Restricted RDS Subnet
+#
+# RDS requires a DB subnet group spanning at least two
+# Availability Zones. This extends the restricted database
+# tier into a second AZ.
+# ============================================================
+
+resource "aws_subnet" "restricted_rds_secondary" {
+  vpc_id                  = aws_vpc.medicore.id
+  cidr_block              = var.restricted_rds_secondary_subnet_cidr
+  availability_zone       = data.aws_availability_zones.available.names[1]
+  map_public_ip_on_launch = false
+
+  tags = {
+    Name    = "${var.project_name}-subnet-restricted-rds-secondary"
+    Tier    = "Restricted"
+    Purpose = "Secondary RDS subnet"
   }
 }
 
@@ -136,5 +158,10 @@ resource "aws_route_table" "restricted_database" {
 
 resource "aws_route_table_association" "restricted_database" {
   subnet_id      = aws_subnet.restricted_database.id
+  route_table_id = aws_route_table.restricted_database.id
+}
+
+resource "aws_route_table_association" "restricted_rds_secondary" {
+  subnet_id      = aws_subnet.restricted_rds_secondary.id
   route_table_id = aws_route_table.restricted_database.id
 }

@@ -119,7 +119,7 @@ resource "aws_vpc_security_group_egress_rule" "web_https_s3" {
 
 
 # ============================================================
-# Database Security Group
+# Dedicated Database VM Security Group
 # ============================================================
 
 resource "aws_security_group" "database" {
@@ -164,4 +164,42 @@ resource "aws_vpc_security_group_egress_rule" "database_https_s3" {
   to_port     = 443
 
   prefix_list_id = aws_vpc_endpoint.s3.prefix_list_id
+}
+
+
+# ============================================================
+# Managed RDS PostgreSQL Security Group
+# ============================================================
+
+resource "aws_security_group" "rds" {
+  name        = "${var.project_name}-sg-rds"
+  description = "Least-privilege PostgreSQL access to the MediCore managed RDS database."
+  vpc_id      = aws_vpc.medicore.id
+
+  tags = {
+    Name = "${var.project_name}-sg-rds"
+    Tier = "Restricted"
+  }
+}
+
+resource "aws_vpc_security_group_ingress_rule" "rds_postgresql_web" {
+  security_group_id = aws_security_group.rds.id
+  description       = "PostgreSQL access from the Web/Application VM private IPv4 only."
+
+  ip_protocol = "tcp"
+  from_port   = 5432
+  to_port     = 5432
+
+  cidr_ipv4 = "${var.web_private_ip}/32"
+}
+
+resource "aws_vpc_security_group_egress_rule" "web_postgresql_rds" {
+  security_group_id = aws_security_group.web.id
+  description       = "PostgreSQL traffic from Web/Application tier to managed RDS."
+
+  ip_protocol = "tcp"
+  from_port   = 5432
+  to_port     = 5432
+
+  referenced_security_group_id = aws_security_group.rds.id
 }

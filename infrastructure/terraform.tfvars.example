@@ -1,4 +1,8 @@
-# Copy this file to terraform.tfvars and replace the example value
-# with the public IPv4 address of the deployment administrator.
+# Copy this file to terraform.tfvars and replace the example
+# values with deployment-specific values.
 
-admin_cidr = "203.0.113.10/32"
+admin_cidr = "86.168.223.145/32"
+
+# Do not use this example password.
+# Generate a strong local password before deployment.
+db_master_password = "752dd02135c7079bf03a1eb3fbafaa49"

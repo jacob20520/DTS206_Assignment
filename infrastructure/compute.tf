@@ -6,8 +6,7 @@ resource "aws_instance" "bastion" {
   ami           = data.aws_ami.ubuntu_2204.id
   instance_type = var.bastion_instance_type
 
-  subnet_id = aws_subnet.public_bastion.id
-
+  subnet_id  = aws_subnet.public_bastion.id
   private_ip = var.bastion_private_ip
 
   associate_public_ip_address = true
@@ -59,8 +58,7 @@ resource "aws_instance" "web" {
   ami           = data.aws_ami.ubuntu_2204.id
   instance_type = var.web_instance_type
 
-  subnet_id = aws_subnet.private_web.id
-
+  subnet_id  = aws_subnet.private_web.id
   private_ip = var.web_private_ip
 
   associate_public_ip_address = false
@@ -113,8 +111,7 @@ resource "aws_instance" "database" {
   ami           = data.aws_ami.ubuntu_2204.id
   instance_type = var.database_instance_type
 
-  subnet_id = aws_subnet.restricted_database.id
-
+  subnet_id  = aws_subnet.restricted_database.id
   private_ip = var.database_private_ip
 
   associate_public_ip_address = false

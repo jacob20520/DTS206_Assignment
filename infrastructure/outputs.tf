@@ -9,7 +9,7 @@ output "vpc_id" {
 
 
 # ============================================================
-# Subnets
+# Initial Three-Tier Subnets
 # ============================================================
 
 output "public_bastion_subnet" {
@@ -33,12 +33,27 @@ output "private_web_subnet" {
 }
 
 output "restricted_database_subnet" {
-  description = "Restricted subnet used by the Database tier."
+  description = "Primary restricted subnet used by the Database tier."
 
   value = {
     id   = aws_subnet.restricted_database.id
     cidr = aws_subnet.restricted_database.cidr_block
     az   = aws_subnet.restricted_database.availability_zone
+  }
+}
+
+
+# ============================================================
+# Secondary Restricted RDS Subnet
+# ============================================================
+
+output "restricted_rds_secondary_subnet" {
+  description = "Secondary restricted subnet used by the RDS DB subnet group."
+
+  value = {
+    id   = aws_subnet.restricted_rds_secondary.id
+    cidr = aws_subnet.restricted_rds_secondary.cidr_block
+    az   = aws_subnet.restricted_rds_secondary.availability_zone
   }
 }
 
@@ -56,6 +71,11 @@ output "ubuntu_2204_ami_id" {
 # ============================================================
 # Bastion
 # ============================================================
+
+output "bastion_instance_id" {
+  description = "EC2 instance ID of the MediCore Bastion host."
+  value       = aws_instance.bastion.id
+}
 
 output "bastion_public_ip" {
   description = "Public IPv4 address of the MediCore Bastion host."
@@ -89,7 +109,7 @@ output "web_availability_zone" {
 
 
 # ============================================================
-# Database VM
+# Dedicated Database VM
 # ============================================================
 
 output "database_instance_id" {
@@ -103,7 +123,7 @@ output "database_private_ip" {
 }
 
 output "database_availability_zone" {
-  description = "Availability Zone hosting the MediCore Database VM."
+  description = "Availability Zone hosting the Database VM."
   value       = aws_instance.database.availability_zone
 }
 
@@ -123,8 +143,13 @@ output "web_security_group_id" {
 }
 
 output "database_security_group_id" {
-  description = "Security group attached to the Database tier."
+  description = "Security group attached to the dedicated Database VM."
   value       = aws_security_group.database.id
+}
+
+output "rds_security_group_id" {
+  description = "Security group protecting the managed RDS database."
+  value       = aws_security_group.rds.id
 }
 
 
@@ -150,4 +175,49 @@ output "s3_vpc_endpoint_id" {
 output "s3_prefix_list_id" {
   description = "AWS-managed S3 prefix list used by security group egress rules."
   value       = aws_vpc_endpoint.s3.prefix_list_id
+}
+
+
+# ============================================================
+# Managed RDS PostgreSQL
+# ============================================================
+
+output "rds_instance_id" {
+  description = "Identifier of the MediCore managed RDS database."
+  value       = aws_db_instance.clinical.identifier
+}
+
+output "rds_endpoint" {
+  description = "PostgreSQL RDS endpoint including port."
+  value       = aws_db_instance.clinical.endpoint
+}
+
+output "rds_address" {
+  description = "DNS address of the MediCore PostgreSQL RDS instance."
+  value       = aws_db_instance.clinical.address
+}
+
+output "rds_port" {
+  description = "PostgreSQL port used by the MediCore RDS instance."
+  value       = aws_db_instance.clinical.port
+}
+
+output "rds_subnet_group_name" {
+  description = "Restricted RDS DB subnet group."
+  value       = aws_db_subnet_group.medicore.name
+}
+
+output "rds_backup_retention_days" {
+  description = "Automated backup retention period for the RDS database."
+  value       = aws_db_instance.clinical.backup_retention_period
+}
+
+output "rds_storage_encrypted" {
+  description = "Whether RDS storage encryption is enabled."
+  value       = aws_db_instance.clinical.storage_encrypted
+}
+
+output "rds_publicly_accessible" {
+  description = "Whether the managed RDS database is publicly accessible."
+  value       = aws_db_instance.clinical.publicly_accessible
 }

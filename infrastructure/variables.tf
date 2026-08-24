@@ -44,9 +44,15 @@ variable "private_subnet_cidr" {
 }
 
 variable "restricted_subnet_cidr" {
-  description = "CIDR range for the restricted Database subnet."
+  description = "CIDR range for the primary restricted Database subnet."
   type        = string
   default     = "10.20.30.0/24"
+}
+
+variable "restricted_rds_secondary_subnet_cidr" {
+  description = "CIDR range for the secondary restricted RDS subnet."
+  type        = string
+  default     = "10.20.31.0/24"
 }
 
 
@@ -76,7 +82,7 @@ variable "ssh_public_key_path" {
 
 
 # ============================================================
-# Fixed Private Addresses
+# Fixed EC2 Private Addresses
 # ============================================================
 
 variable "bastion_private_ip" {
@@ -118,4 +124,44 @@ variable "database_instance_type" {
   description = "EC2 instance type used by the Database VM."
   type        = string
   default     = "t3.micro"
+}
+
+
+# ============================================================
+# RDS
+# ============================================================
+
+variable "rds_instance_class" {
+  description = "Instance class used by the MediCore managed RDS database."
+  type        = string
+  default     = "db.t3.micro"
+}
+
+variable "rds_allocated_storage" {
+  description = "Allocated RDS PostgreSQL storage in GiB."
+  type        = number
+  default     = 20
+}
+
+variable "rds_database_name" {
+  description = "Initial PostgreSQL database name."
+  type        = string
+  default     = "medicore"
+}
+
+variable "rds_master_username" {
+  description = "Administrative username for the RDS PostgreSQL database."
+  type        = string
+  default     = "medicoreadmin"
+}
+
+variable "db_master_password" {
+  description = "Master password for the MediCore RDS PostgreSQL database."
+  type        = string
+  sensitive   = true
+
+  validation {
+    condition     = length(var.db_master_password) >= 16
+    error_message = "The RDS master password must contain at least 16 characters."
+  }
 }
