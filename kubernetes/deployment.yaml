@@ -1,0 +1,158 @@
+# Kubernetes API containing the stable Deployment resource.
+apiVersion: apps/v1
+
+# A Deployment continuously maintains the requested Pod replicas.
+kind: Deployment
+
+metadata:
+  # Stable name used by kubectl and the NodePort Service.
+  name: medicore-a4
+
+  labels:
+    app: medicore-a4
+    project: medicore
+
+spec:
+  # Assignment requirement: minimum two Kubernetes replicas.
+  replicas: 2
+
+  # Defines which Pods belong to this Deployment.
+  selector:
+    matchLabels:
+      app: medicore-a4
+
+  # Rolling updates avoid replacing every replica simultaneously.
+  strategy:
+    type: RollingUpdate
+
+    rollingUpdate:
+      # Keep existing capacity during an update.
+      maxUnavailable: 0
+
+      # Permit one temporary additional Pod during rollout.
+      maxSurge: 1
+
+  template:
+    metadata:
+      labels:
+        # Must match spec.selector.matchLabels.
+        app: medicore-a4
+
+        project: medicore
+
+    spec:
+      # The application has no requirement to authenticate to the
+      # Kubernetes API, so no service-account token is mounted.
+      automountServiceAccountToken: false
+
+      securityContext:
+        # Assignment requirement: reject root execution.
+        runAsNonRoot: true
+
+        # Assignment requirement: same non-root UID as Docker image.
+        runAsUser: 1001
+
+        # Match the Docker image group.
+        runAsGroup: 1001
+
+        # Allows group ownership of mounted writable storage.
+        fsGroup: 1001
+
+        # Apply the Kubernetes default seccomp syscall profile.
+        seccompProfile:
+          type: RuntimeDefault
+
+      containers:
+        - name: medicore-a4
+
+          # Local assessed image loaded into Minikube.
+          image: medicore-a4:1.0
+
+          # Use the preloaded local image where available.
+          imagePullPolicy: IfNotPresent
+
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+
+          env:
+            # Only the location of the secret is exposed in the
+            # environment, never the secret value.
+            - name: MEDICORE_DB_PASSWORD_FILE
+              value: /run/secrets/db_password
+
+          resources:
+            requests:
+              # Guaranteed scheduling request.
+              cpu: 100m
+              memory: 128Mi
+
+            limits:
+              # Upper runtime resource boundary.
+              cpu: 500m
+              memory: 256Mi
+
+          securityContext:
+            # Prevent setuid/sudo-style privilege escalation.
+            allowPrivilegeEscalation: false
+
+            # Extend Docker's immutable filesystem design to K8s.
+            readOnlyRootFilesystem: true
+
+            capabilities:
+              # Remove all Linux capabilities.
+              drop:
+                - ALL
+
+          # Assignment requirement: /health liveness probe.
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            timeoutSeconds: 3
+            failureThreshold: 3
+
+          # Extra availability control: only healthy Pods receive
+          # Service traffic.
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: http
+
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            timeoutSeconds: 3
+            failureThreshold: 3
+
+          volumeMounts:
+            # Gunicorn requires writable temporary storage even though
+            # the root filesystem is read-only.
+            - name: tmp
+              mountPath: /tmp
+
+            # Kubernetes Secret mounted read-only.
+            - name: db-password
+              mountPath: /run/secrets
+              readOnly: true
+
+      volumes:
+        - name: tmp
+
+          emptyDir:
+            # Memory-backed temporary storage.
+            medium: Memory
+
+            # Prevent unlimited temporary-data growth.
+            sizeLimit: 64Mi
+
+        - name: db-password
+
+          secret:
+            secretName: medicore-db-password
+
+            # Owner/group read only.
+            defaultMode: 0440

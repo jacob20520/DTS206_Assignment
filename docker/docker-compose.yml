@@ -1,0 +1,64 @@
+services:
+  web:
+    image: medicore-a4:1.0
+
+    build:
+      context: .
+      dockerfile: Dockerfile
+
+    container_name: medicore-a4
+
+    # Explicit assessed non-root runtime identity.
+    user: "1001:1001"
+
+    # Assignment requirement: immutable root filesystem.
+    read_only: true
+
+    # Defence-in-depth hardening.
+    cap_drop:
+      - ALL
+
+    security_opt:
+      - no-new-privileges:true
+
+    # Assignment resource limits.
+    mem_limit: 256m
+    cpus: 0.5
+
+    # Prevent process-exhaustion attacks.
+    pids_limit: 100
+
+    # Writable temporary storage without permitting executable files.
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,size=64m
+
+    # The password is mounted as a Docker secret.
+    secrets:
+      - db_password
+
+    environment:
+      MEDICORE_DB_PASSWORD_FILE: /run/secrets/db_password
+
+    # Bound to localhost because this is the local A4 test deployment.
+    ports:
+      - "127.0.0.1:8080:8080"
+
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "python",
+          "-c",
+          "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8080/health', timeout=2).read()"
+        ]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+      start_period: 10s
+
+    restart: unless-stopped
+
+
+secrets:
+  db_password:
+    file: ./secrets/db_password.txt

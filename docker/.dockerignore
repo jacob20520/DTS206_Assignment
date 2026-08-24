@@ -1,0 +1,16 @@
+.git
+.gitignore
+
+__pycache__
+*.py[cod]
+*.pyo
+
+.venv
+venv
+
+secrets/
+scans/
+
+vulnerability-notes.md
+
+*.log

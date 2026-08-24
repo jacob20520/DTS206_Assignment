@@ -60,3 +60,11 @@ venv/
 .vscode/
 .DS_Store
 Thumbs.db
+
+# Docker runtime secrets
+docker/secrets/*
+!docker/secrets/.gitkeep
+!docker/secrets/README.md
+
+# Temporary scanner JSON used to generate documentation
+docker/scans/*.json

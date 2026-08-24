@@ -1,0 +1,34 @@
+# Stable Kubernetes Service API.
+apiVersion: v1
+
+# Service exposes the changing Deployment Pods through one endpoint.
+kind: Service
+
+metadata:
+  name: medicore-a4
+
+  labels:
+    app: medicore-a4
+    project: medicore
+
+spec:
+  # Assignment explicitly requires a NodePort for Minikube.
+  type: NodePort
+
+  # Forward only to Pods carrying this application label.
+  selector:
+    app: medicore-a4
+
+  ports:
+    - name: http
+
+      # Service-level port.
+      port: 8080
+
+      # Application container port.
+      targetPort: http
+
+      # Valid Kubernetes NodePort range.
+      nodePort: 30080
+
+      protocol: TCP
