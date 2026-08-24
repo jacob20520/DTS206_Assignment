@@ -28,7 +28,7 @@ resource "aws_cloudwatch_metric_alarm" "bastion_status_check_failed" {
   statistic = "Maximum"
   period    = 300
 
-  evaluation_periods = 1
+  evaluation_periods  = 1
   datapoints_to_alarm = 1
 
   comparison_operator = "GreaterThanOrEqualToThreshold"
@@ -65,7 +65,7 @@ resource "aws_cloudwatch_metric_alarm" "web_cpu_high" {
   statistic = "Average"
   period    = 300
 
-  evaluation_periods = 2
+  evaluation_periods  = 2
   datapoints_to_alarm = 2
 
   comparison_operator = "GreaterThanThreshold"
@@ -102,7 +102,7 @@ resource "aws_cloudwatch_metric_alarm" "database_cpu_high" {
   statistic = "Average"
   period    = 300
 
-  evaluation_periods = 2
+  evaluation_periods  = 2
   datapoints_to_alarm = 2
 
   comparison_operator = "GreaterThanThreshold"
@@ -139,7 +139,7 @@ resource "aws_cloudwatch_metric_alarm" "rds_cpu_high" {
   statistic = "Average"
   period    = 300
 
-  evaluation_periods = 2
+  evaluation_periods  = 2
   datapoints_to_alarm = 2
 
   comparison_operator = "GreaterThanThreshold"
@@ -179,7 +179,7 @@ resource "aws_cloudwatch_metric_alarm" "rds_free_storage_low" {
   statistic = "Minimum"
   period    = 300
 
-  evaluation_periods = 1
+  evaluation_periods  = 1
   datapoints_to_alarm = 1
 
   comparison_operator = "LessThanThreshold"
