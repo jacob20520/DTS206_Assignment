@@ -83,3 +83,15 @@ variable "bastion_instance_type" {
   type        = string
   default     = "t3.micro"
 }
+
+variable "web_instance_type" {
+  description = "EC2 instance type used by the Web/Application VM."
+  type        = string
+  default     = "t3.micro"
+}
+
+variable "database_instance_type" {
+  description = "EC2 instance type used by the Database VM."
+  type        = string
+  default     = "t3.micro"
+}

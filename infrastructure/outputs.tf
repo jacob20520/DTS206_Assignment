@@ -86,3 +86,42 @@ output "database_security_group_id" {
   description = "Security group reserved for the Database VM."
   value       = aws_security_group.database.id
 }
+
+# ============================================================
+# Web / Application VM
+# ============================================================
+
+output "web_instance_id" {
+  description = "EC2 instance ID of the MediCore Web/Application VM."
+  value       = aws_instance.web.id
+}
+
+output "web_private_ip" {
+  description = "Private IPv4 address of the MediCore Web/Application VM."
+  value       = aws_instance.web.private_ip
+}
+
+output "web_availability_zone" {
+  description = "Availability Zone hosting the Web/Application VM."
+  value       = aws_instance.web.availability_zone
+}
+
+
+# ============================================================
+# Database VM
+# ============================================================
+
+output "database_instance_id" {
+  description = "EC2 instance ID of the MediCore Database VM."
+  value       = aws_instance.database.id
+}
+
+output "database_private_ip" {
+  description = "Private IPv4 address of the MediCore Database VM."
+  value       = aws_instance.database.private_ip
+}
+
+output "database_availability_zone" {
+  description = "Availability Zone hosting the MediCore Database VM."
+  value       = aws_instance.database.availability_zone
+}
