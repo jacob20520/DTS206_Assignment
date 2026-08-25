@@ -1,0 +1,46 @@
+ignore:
+  # perl-base findings inherited from required python:3.11-slim base
+
+  - vulnerability: CVE-2026-8376
+    package:
+      name: perl-base
+      version: 5.40.1-6
+      type: deb
+
+  - vulnerability: CVE-2026-13221
+    package:
+      name: perl-base
+      version: 5.40.1-6
+      type: deb
+
+  - vulnerability: CVE-2026-42496
+    package:
+      name: perl-base
+      version: 5.40.1-6
+      type: deb
+
+  - vulnerability: CVE-2026-12087
+    package:
+      name: perl-base
+      version: 5.40.1-6
+      type: deb
+
+  - vulnerability: CVE-2026-57433
+    package:
+      name: perl-base
+      version: 5.40.1-6
+      type: deb
+
+  # glibc findings inherited from required Debian base
+
+  - vulnerability: CVE-2026-5450
+    package:
+      name: libc-bin
+      version: 2.41-12+deb13u3
+      type: deb
+
+  - vulnerability: CVE-2026-5450
+    package:
+      name: libc6
+      version: 2.41-12+deb13u3
+      type: deb

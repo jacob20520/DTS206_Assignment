@@ -1,0 +1,30 @@
+vulnerabilities:
+  - id: CVE-2026-8376
+    expired_at: 2026-09-30
+    statement: >-
+      Inherited from the required official python:3.11-slim Debian
+      base image. No supported stable package fix was available at
+      assessment time. The published vulnerability affects 32-bit
+      Perl builds while the assessed MediCore image is linux/amd64.
+      Raw scanner evidence is retained and the exception must be
+      reviewed when a fixed Debian package becomes available.
+
+  - id: CVE-2026-13221
+    expired_at: 2026-09-30
+    statement: >-
+      Inherited from perl-base in the required official
+      python:3.11-slim Debian base image. No supported stable package
+      fix was available at assessment time. MediCore is implemented
+      using Python, Flask and Gunicorn and does not execute
+      attacker-controlled Perl regular expressions. Raw scanner
+      evidence is retained for audit and this exception is temporary.
+
+  - id: CVE-2026-42496
+    expired_at: 2026-09-30
+    statement: >-
+      Inherited from perl-base in the required official
+      python:3.11-slim Debian base image. The stable distribution did
+      not provide a supported fix at assessment time. The MediCore
+      workload does not invoke the affected Perl Archive::Tar
+      functionality. Raw evidence is retained and the finding will be
+      reviewed when an updated stable package becomes available.
